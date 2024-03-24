@@ -332,7 +332,6 @@ func (c *client) loop() {
 	defer close(c.shutdown)
 
 	wg := &sync.WaitGroup{}
-	defer wg.Wait()
 
 	tick := time.NewTicker(c.Interval)
 	defer tick.Stop()
@@ -364,6 +363,7 @@ func (c *client) loop() {
 			}
 
 			c.flush(&mq, wg, ex)
+			wg.Wait()
 			c.debugf("exit")
 			return
 		}
