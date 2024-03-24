@@ -347,6 +347,13 @@ func TestEnqueuingCustomTypeFails(t *testing.T) {
 	}
 }
 
+func TestWriteKeyNotPresent(t *testing.T) {
+	_, err := NewWithConfig("", Config{})
+	if err.Error() != "write key is required" {
+		t.Errorf("invalid/missing error when write key is not present: %v", err)
+	}
+}
+
 func TestTrackWithInterval(t *testing.T) {
 	const interval = 100 * time.Millisecond
 	var ref = fixture("test-interval-track.json")

@@ -76,17 +76,22 @@ func New(writeKey string) Client {
 // values (like a negative flush interval for example).
 // When the function returns an error the returned client will always be nil.
 func NewWithConfig(writeKey string, config Config) (cli Client, err error) {
+	if writeKey == "" {
+		err = fmt.Errorf("write key is required")
+		return nil, err
+	}
 	if err = config.validate(); err != nil {
-		return
+		return nil, err
 	}
 
+	defaultConfig := makeConfig(config)
 	c := &client{
-		Config:   makeConfig(config),
+		Config:   defaultConfig,
 		key:      writeKey,
 		msgs:     make(chan Message, 100),
 		quit:     make(chan struct{}),
 		shutdown: make(chan struct{}),
-		http:     makeHttpClient(config.Transport),
+		http:     makeHttpClient(defaultConfig.Transport),
 	}
 
 	go c.loop()
