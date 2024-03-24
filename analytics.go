@@ -3,7 +3,6 @@ package analytics
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"strconv"
 	"sync"
 
@@ -319,7 +318,7 @@ func (c *client) report(res *http.Response) (err error) {
 		return
 	}
 
-	if body, err = ioutil.ReadAll(res.Body); err != nil {
+	if body, err = io.ReadAll(res.Body); err != nil {
 		c.errorf("response %d %s - %s", res.StatusCode, res.Status, err)
 		return
 	}
